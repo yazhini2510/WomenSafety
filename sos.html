@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Women Safe</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-image: url("women\ safety\ background\ image.jpg");
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    .container {
+      display: flex;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: #fdf2dc;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      padding: 1.5rem 1rem;
+    }
+
+    .sidebar.hidden {
+      transform: translateX(-100%);
+    }
+
+    .sidebar .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 2rem;
+    }
+
+    .sidebar .logo img {
+      height: 50px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+
+    .sidebar ul li {
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .sidebar ul li img {
+      width: 24px;
+    }
+
+    .topbar {
+      width: 100%;
+      padding: 1rem;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .hamburger {
+      font-size: 1.8rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .search-box input {
+      padding: 0.5rem;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      width: 200px;
+    }
+
+    .content {
+      margin-left: 250px;
+      padding: 2rem;
+      transition: margin-left 0.3s ease;
+      width: 100%;
+    }
+
+    .sidebar.hidden ~ .content {
+      margin-left: 0;
+    }
+
+    .features-section {
+      text-align: center;
+    }
+
+    .features-section h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn-group {
+      margin-bottom: 2rem;
+    }
+
+    .btn-group button {
+      padding: 0.6rem 1.2rem;
+      margin: 0 0.5rem;
+      background: #fff;
+      border: 2px solid #333;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+
+    .card {
+      background: #fdf2dc;
+      padding: 1rem;
+      border-radius: 15px;
+      width: 180px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card img {
+      height: 100px;
+      margin-bottom: 1rem;
+    }
+
+    .map-section {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .map-section h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .map-section iframe {
+      width: 100%;
+      max-width: 600px;
+      height: 300px;
+      border: none;
+    }
+
+    .location-controls {
+      margin-bottom: 1rem;
+    }
+
+    .get-location-btn, .live-track-btn, .stop-track-btn {
+      border: none;
+      padding: 10px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      margin: 0 10px;
+    }
+
+    .get-location-btn {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .get-location-btn:hover { background: #45a049; }
+
+    .live-track-btn {
+      background: #2196F3;
+      color: white;
+    }
+
+    .live-track-btn:hover { background: #1976D2; }
+
+    .stop-track-btn {
+      background: #f44336;
+      color: white;
+    }
+
+    .stop-track-btn:hover { background: #d32f2f; }
+
+    .location-status {
+      color: #fff;
+      margin: 10px 0;
+      font-weight: bold;
+      padding: 10px;
+      border-radius: 10px;
+      min-height: 20px;
+    }
+
+    .status-loading { background: rgba(255,193,7,0.3); }
+    .status-success { background: rgba(76,175,80,0.3); }
+    .status-error { background: rgba(244,67,54,0.3); }
+
+    @media screen and (max-width: 768px) {
+      .content {
+        margin-left: 0;
+        padding: 1rem;
+      }
+
+      .sidebar {
+        width: 200px;
+      }
+
+      .card {
+        width: 150px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Sidebar -->
+  <nav id="sidebar" class="sidebar">
+    <div class="logo">
+      <img src="logo.png"/>
+      <h2>Women Safe</h2>
+    </div>
+    <ul>
+      <li><img src="https://img.icons8.com/ios-filled/50/dashboard.png"/><span>Dashboard</span></li>
+      <li><img src="https://img.icons8.com/ios-filled/50/settings.png"/><span>Settings</span></li>
+      <li><img src="email.png"/><span>Message</span></li>
+      <li><img src="https://img.icons8.com/ios-filled/50/help.png"/><span>Help</span></li>
+      <li><img src="https://img.icons8.com/ios-filled/50/user.png"/><span>My Account</span></li>
+      <li><img src="https://img.icons8.com/ios-filled/50/logout-rounded.png"/><span>Sign Out</span></li>
+    </ul>
+  </nav>
+
+  <!-- Content Area -->
+  <div class="content">
+    <!-- Topbar -->
+    <div class="topbar">
+      <button class="hamburger" onclick="toggleSidebar()">☰</button>
+      <div class="search-box">
+        <input type="text" placeholder="Search"/>
+        <img src="https://img.icons8.com/ios-filled/24/search--v1.png"/>
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-section">
+      <h2>Features</h2>
+      <div class="btn-group">
+        <button>Get Started</button>
+        <button>Learn More</button>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <img src="sos1.png" />
+          <h4>Emergency SOS</h4>
+        </div>
+        <div class="card">
+          <img src="https://img.icons8.com/color/96/policeman-male.png" />
+          <h4>Nearby Police</h4>
+        </div>
+        <div class="card">
+          <img src="https://img.icons8.com/color/96/police-car.png" />
+          <h4>Patrol Service</h4>
+        </div>
+        <div class="card">
+          <img src="https://img.icons8.com/ios-filled/100/000000/phone.png" />
+          <h4>District Call</h4>
+        </div>
+        <div class="card">
+          <img src="https://img.icons8.com/ios-filled/100/000000/marker.png" />
+          <h4>Live Location</h4>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map Section -->
+    <div class="map-section">
+      <h3 style="color: white;">🔴 LIVE LOCATION</h3>
+      
+      <div class="location-controls">
+        <button class="get-location-btn" onclick="getCurrentLocation()">
+          📍 Get My Location
+        </button>
+        <button class="live-track-btn" onclick="startLiveTracking()">
+          ▶️ Live Tracking
+        </button>
+        <button class="stop-track-btn" onclick="stopLiveTracking()">
+          ⏹️ Stop Tracking
+        </button>
+      </div>
+      
+      <div id="location-status" class="location-status">Click "Get My Location" first</div>
+      
+      <iframe 
+        id="live-map"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3898.228947614614!2d78.11739961477492!3d10.98361499281098!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba8eaa48f7d7d5b%3A0x7c8b2a7b8c5c5b7c!2sSinganallur%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1736800000000!5m2!1sen!2sin" 
+        allowfullscreen="" 
+        loading="lazy">
+      </iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+  let watchId = null;
+  let isTracking = false;
+  let authToken = localStorage.getItem('authToken'); // Get token from login
+
+  // 🚫 CHECK LOGIN - Redirect if not logged in
+  if (!authToken) {
+    window.location.href = 'index.html';
+  }
+
+  // API Helper Function
+  async function apiRequest(endpoint, options = {}) {
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        ...options
+      };
+      const response = await fetch(`http://localhost:5000/api${endpoint}`, config);
+      if (!response.ok) throw new Error(await response.text());
+      return await response.json();
+    } catch (error) {
+      console.error('API Error:', error);
+      throw error;
+    }
+  }
+
+  function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("hidden");
+  }
+
+  function updateStatus(msg, type = 'info') {
+    const statusEl = document.getElementById('location-status');
+    statusEl.textContent = msg;
+    statusEl.className = `location-status status-${type}`;
+  }
+
+  function updateMap(lat, lng) {
+    const url = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3991.8!2d${lng}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0:0x0!2z${lat},${lng}!5e0!3m2!1sen!2sin!4v1736800000000!5m2!1sen!2sin`;
+    document.getElementById('live-map').src = url;
+  }
+
+  // ✅ FIXED Get My Location + Backend Save
+  async function getCurrentLocation() {
+    if (!navigator.geolocation) {
+      updateStatus('❌ Geolocation not supported', 'error');
+      return;
+    }
+
+    updateStatus('🔄 Getting location...', 'loading');
+    
+    navigator.geolocation.getCurrentPosition(
+      async function(position) {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        
+        try {
+          // Save location to backend
+          await apiRequest('/alerts/location', {
+            method: 'POST',
+            body: JSON.stringify({ latitude: lat, longitude: lng, type: 'checkin' })
+          });
+          updateStatus(`✅ Saved: ${lat.toFixed(6)}, ${lng.toFixed(6)}`, 'success');
+        } catch (error) {
+          updateStatus(`✅ Local: ${lat.toFixed(6)}, ${lng.toFixed(6)}`, 'success');
+        }
+        
+        updateMap(lat, lng);
+      },
+      function(error) {
+        let msg = '❌ Location failed: ';
+        switch(error.code) {
+          case error.PERMISSION_DENIED: msg += 'Allow location access'; break;
+          case error.POSITION_UNAVAILABLE: msg += 'Location unavailable'; break;
+          case error.TIMEOUT: msg += 'Request timeout'; break;
+          default: msg += 'Unknown error';
+        }
+        updateStatus(msg, 'error');
+      }
+    );
+  }
+
+  // 🚨 SOS EMERGENCY BUTTON - Connected to Backend
+  function setupSOSButton() {
+    const sosCard = document.querySelector('.card img[src="sos1.png"]').closest('.card');
+    sosCard.style.cursor = 'pointer';
+    sosCard.style.border = '3px solid #ff4444';
+    
+    sosCard.addEventListener('click', async function() {
+      updateStatus('🚨 Sending SOS...', 'loading');
+      
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          
+          try {
+            const response = await apiRequest('/alerts/sos', {
+              method: 'POST',
+              body: JSON.stringify({
+                latitude: lat,
+                longitude: lng,
+                message: '🚨 EMERGENCY SOS ALERT!',
+                type: 'sos'
+              })
+            });
+            
+            updateStatus(`✅ SOS SENT! ID: ${response.alertId}`, 'success');
+            this.style.background = '#ff4444';
+            setTimeout(() => {
+              this.style.background = '#fdf2dc';
+            }, 3000);
+          } catch (error) {
+            updateStatus('❌ SOS failed - Check backend', 'error');
+          }
+        },
+        () => updateStatus('❌ Location required for SOS', 'error'),
+        { timeout: 10000 }
+      );
+    });
+  }
+
+  // Live tracking functions (unchanged)
+  function startLiveTracking() {
+    if (!navigator.geolocation || isTracking) {
+      updateStatus(isTracking ? 'Already tracking' : 'Geolocation not supported', 'error');
+      return;
+    }
+
+    stopLiveTracking();
+    updateStatus('▶️ Live tracking ON', 'success');
+    isTracking = true;
+
+    watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        updateMap(lat, lng);
+      },
+      () => {}, // Silent error
+      { timeout: 20000, maximumAge: 30000 }
+    );
+
+    setTimeout(() => {
+      stopLiveTracking();
+      updateStatus('⏹️ Auto-stopped', 'info');
+    }, 300000);
+  }
+
+  function stopLiveTracking() {
+    if (watchId) {
+      navigator.geolocation.clearWatch(watchId);
+      watchId = null;
+    }
+    isTracking = false;
+    updateStatus('⏹️ Tracking stopped', 'info');
+  }
+
+  // Initialize
+  window.onload = function() {
+    updateStatus('👆 Click "Get Location" & ALLOW', 'info');
+    setupSOSButton();
+  };
+</script>
+
+
+</body>
+</html>
